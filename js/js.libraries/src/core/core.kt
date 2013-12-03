@@ -14,9 +14,6 @@ native public fun <K, V> MutableMap<K, V>.set(key: K, value: V): Unit = noImpl
 library("hashCode")
 public fun Any.hashCode() : Int = js.noImpl
 
-library("hashNumberImpl")
-public fun Number.hashCode() : Int = js.noImpl
-
 library("hashStringImpl")
 public fun String.hashCode() : Int = js.noImpl
 

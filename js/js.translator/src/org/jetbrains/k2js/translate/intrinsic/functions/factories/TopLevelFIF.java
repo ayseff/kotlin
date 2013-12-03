@@ -140,9 +140,6 @@ public final class TopLevelFIF extends CompositeFIF {
     public static final KotlinFunctionIntrinsic HASH_NUMBER_IMPL = new KotlinFunctionIntrinsic("hashNumberImpl");
 
     @NotNull
-    public static final KotlinFunctionIntrinsic HASH_STRING_IMPL = new KotlinFunctionIntrinsic("hashStringImpl");
-
-    @NotNull
     public static final FunctionIntrinsicFactory INSTANCE = new TopLevelFIF();
 
     private TopLevelFIF() {
@@ -151,16 +148,9 @@ public final class TopLevelFIF extends CompositeFIF {
         add(pattern("jet", "equals").receiverExists(), EQUALS);
         add(pattern("jet", "identityEquals").receiverExists(), IDENTITY_EQUALS);
 
-        add(pattern(new NamePredicate(
-                PrimitiveType.BOOLEAN.getTypeName().toString(),
-                PrimitiveType.BYTE.getTypeName().toString(),
-                PrimitiveType.SHORT.getTypeName().toString(),
-                PrimitiveType.INT.getTypeName().toString(),
-                PrimitiveType.FLOAT.getTypeName().toString(),
-                PrimitiveType.LONG.getTypeName().toString(),
-                PrimitiveType.DOUBLE.getTypeName().toString()), HASH_CODE_NAME), HASH_NUMBER_IMPL);
+        // it is necessary to prevent to use Number.hashCode for Char
         add(pattern(new NamePredicate(PrimitiveType.CHAR.getTypeName().toString()), HASH_CODE_NAME), HASH_CHAR_IMPL);
-        add(pattern(NamePredicate.STRING, HASH_CODE_NAME), HASH_STRING_IMPL);
+        add(pattern("jet", "Number", HASH_CODE_NAME).checkOverridden(), HASH_NUMBER_IMPL);
 
         add(pattern(NamePredicate.PRIMITIVE_NUMBERS, "equals"), EQUALS);
         add(pattern("String|Boolean|Char|Number.equals"), EQUALS);
