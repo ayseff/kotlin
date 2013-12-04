@@ -71,7 +71,7 @@ class ArraysJVMTest {
         assertTrue(charArray().isEmpty())
         assertFalse(charArray('a').isEmpty())
         assertTrue(floatArray().isEmpty())
-        assertFalse(floatArray(0.1).isEmpty())
+        assertFalse(floatArray(0.1.toFloat()).isEmpty())
         assertTrue(doubleArray().isEmpty())
         assertFalse(doubleArray(0.1).isEmpty())
         assertTrue(booleanArray().isEmpty())
@@ -128,6 +128,7 @@ class ArraysJVMTest {
         expect(3000000000000, { longArray(3000000000000, 2000000000000).maxBy { it + 1 } })
         expect(3, { byteArray(1, 3, 2).maxBy { it * it } })
         expect(3, { shortArray(3, 2).maxBy { "a" } })
+        expect(3.0, { floatArray(3.0.toFloat(), 2.0.toFloat()).maxBy { it.toString() } })
         expect(3.0.toFloat(), { floatArray(3.0.toFloat(), 2.0.toFloat()).maxBy { it.toString() } })
         expect(3.0, { doubleArray(2.0, 3.0).maxBy { Math.sqrt(it) } })
     }
