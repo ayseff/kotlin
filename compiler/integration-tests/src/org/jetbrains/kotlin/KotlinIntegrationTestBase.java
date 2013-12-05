@@ -52,6 +52,11 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.*;
 
 public abstract class KotlinIntegrationTestBase {
+    public static final String OUT_PREFIX = "OUT ";
+    public static final String ERR_PREFIX = "ERR ";
+    @Language("RegExp")
+    public static final String LINE_WITHOUT_CONTENT = "(?m)^(" + OUT_PREFIX + "|" + ERR_PREFIX + ")\\s*$\\n";
+
     protected File testDataDir;
 
     @Rule
@@ -115,10 +120,15 @@ public abstract class KotlinIntegrationTestBase {
         });
     }
 
+    private static String trimLinesWithoutContent(String content) {
+        return StringUtil.convertLineSeparators(content).replaceAll(LINE_WITHOUT_CONTENT, "");
+    }
+
     protected String normalizeOutput(String content) {
         content = normalizePath(content, testDataDir, "[TestData]");
         content = normalizePath(content, tmpdir.getTmpDir(), "[Temp]");
         content = normalizePath(content, getCompilerLib(), "[CompilerLib]");
+        content = trimLinesWithoutContent(content);
         return content;
     }
 
@@ -158,10 +168,10 @@ public abstract class KotlinIntegrationTestBase {
                     System.out.print(event.getText());
                 }
                 else if (outputType == ProcessOutputTypes.STDOUT) {
-                    appendToContent(outContent, "OUT ", event.getText());
+                    appendToContent(outContent, OUT_PREFIX, event.getText());
                 }
                 else if (outputType == ProcessOutputTypes.STDERR) {
-                    appendToContent(errContent, "ERR ", event.getText());
+                    appendToContent(errContent, ERR_PREFIX, event.getText());
                 }
             }
 
